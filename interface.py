@@ -4,7 +4,7 @@ Permite ao usuário interagir com o tabuleiro e definir estados iniciais.
 """
 
 import tkinter as tk
-from tkinter import messagebox, simpledialog
+from tkinter import messagebox, simpledialog, ttk
 from typing import List, Optional
 import random
 
@@ -17,7 +17,7 @@ class PuzzleGUI:
     def __init__(self, root: tk.Tk):
         self.root = root
         self.root.title("Puzzle 8 - Jogo do Quebra-Cabeça")
-        self.root.geometry("650x750")
+        self.root.geometry("850x960")
         self.root.resizable(False, False)
         
         # Estado do jogo
@@ -113,7 +113,37 @@ class PuzzleGUI:
         )
         btn_custom.grid(row=1, column=0, columnspan=2, padx=10, pady=8)
         
-        # Terceira linha - botão resolver
+        # Terceira linha - label do método de resolução
+        method_label = tk.Label(
+            controls_frame,
+            text="Método de Resolução:",
+            font=("Arial", 12),
+            bg=self.colors['background']
+        )
+        method_label.grid(row=2, column=0, columnspan=2, padx=10, pady=(10, 0))
+        
+        # Quarta linha - combobox do método de resolução
+        # Lista de métodos disponíveis
+        self.solving_methods = [
+            "Busca em Largura (BFS)",
+            "Busca em Profundidade (DFS)",
+            "Busca Heurística",
+            "A*"
+        ]
+        
+        self.method_var = tk.StringVar(value=self.solving_methods[0])
+        
+        self.method_combobox = ttk.Combobox(
+            controls_frame,
+            textvariable=self.method_var,
+            values=self.solving_methods,
+            state="readonly",
+            width=38,
+            font=("Arial", 10)
+        )
+        self.method_combobox.grid(row=3, column=0, columnspan=2, padx=10, pady=(0, 10))
+        
+        # Quinta linha - botão resolver
         btn_solve = tk.Button(
             controls_frame,
             text="Resolver",
@@ -124,11 +154,11 @@ class PuzzleGUI:
             width=40,
             height=2
         )
-        btn_solve.grid(row=2, column=0, columnspan=2, padx=10, pady=10)
+        btn_solve.grid(row=4, column=0, columnspan=2, padx=10, pady=10)
         
         # Frame de informações
         info_frame = tk.Frame(main_frame, bg=self.colors['background'])
-        info_frame.pack(pady=20)
+        info_frame.pack(pady=10)
         
         # Labels de informação
         self.status_label = tk.Label(
@@ -237,15 +267,26 @@ class PuzzleGUI:
                 self.update_display()
             else:
                 messagebox.showerror("Erro", "Estado inválido! Certifique-se de usar os números 0-8 exatamente uma vez.")
-    
-
-    
+                
     def solve_puzzle(self):
-        """Placeholder para função de resolução (será implementada posteriormente)"""
-        messagebox.showinfo(
-            "Em desenvolvimento"
-        )
-
+        """Resolve o puzzle usando o método selecionado"""
+        if self.board.is_goal_state():
+            messagebox.showinfo("Já resolvido", "O puzzle já está no estado final!")
+            return
+        
+        if not self.board.is_solvable():
+            messagebox.showwarning("Não solvível", "Este estado do puzzle não pode ser resolvido!")
+            return
+        
+        selected_method = self.solving_methods.index(self.method_var.get()) 
+        
+        if selected_method == 0:
+            state_board_in_list = list()
+            for i in range(3):
+                for j in range(3):
+                    state_board_in_list.append(self.board.state[i][j])
+            print("largura", state_board_in_list)
+        
 
 class CustomStateDialog:
     """Dialog para definir um estado personalizado do tabuleiro"""
