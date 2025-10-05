@@ -3,9 +3,9 @@ from collections import deque
 from generate_succeessors import create_successors
 from Node import Node
 
-init_board = [8,7,6,
-              5,4,3,
-              2,1,0]
+init_board = [1,6,0,
+              7,8,2,
+              3,4,5]
 final_state =  [
               1,2,3,
               4,5,6,

@@ -274,7 +274,8 @@ class PuzzleGUI:
             return
         self.board.move(moves[index])
         self.update_display()
-        self.root.after(300, lambda: self.play_solution(moves, index + 1))              
+        self.root.after(300, lambda: self.play_solution(moves, index + 1)) 
+        self.move_count += 1             
     
     def solve_puzzle(self):
         """Resolve o puzzle usando o método selecionado"""
@@ -298,9 +299,13 @@ class PuzzleGUI:
             
             root = Node(state_board_in_list, None, None)
             solve_node, node_visited = bfs(root)
+            if not solve_node:
+                messagebox.showwarning("O algoritmo não encontrou uma solução para esse tabuleiro")
+                return
             list_backtracking_nodes = backtracking(solve_node)
             for node in list_backtracking_nodes:
                 self.current_solution.append(node.action)
+            self.move_count = 0    
             self.play_solution(self.current_solution)
         if selected_method == 1: # DFS
             pass
