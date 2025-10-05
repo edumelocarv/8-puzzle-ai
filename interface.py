@@ -7,7 +7,8 @@ import tkinter as tk
 from tkinter import messagebox, simpledialog, ttk
 from typing import List, Optional
 import random
-
+from breath_first_search import bfs, backtracking
+from Node import Node
 from puzzle_game import Board
 
 
@@ -19,9 +20,10 @@ class PuzzleGUI:
         self.root.title("Puzzle 8 - Jogo do Quebra-Cabeça")
         self.root.geometry("850x960")
         self.root.resizable(False, False)
-        
+        self.current_solution = list()
         # Estado do jogo
         self.board = Board()
+        
         
         # Cores
         self.colors = {
@@ -267,7 +269,13 @@ class PuzzleGUI:
                 self.update_display()
             else:
                 messagebox.showerror("Erro", "Estado inválido! Certifique-se de usar os números 0-8 exatamente uma vez.")
-                
+    def play_solution(self, moves, index=0):
+        if index >= len(moves):
+            return
+        self.board.move(moves[index])
+        self.update_display()
+        self.root.after(300, lambda: self.play_solution(moves, index + 1))              
+    
     def solve_puzzle(self):
         """Resolve o puzzle usando o método selecionado"""
         if self.board.is_goal_state():
@@ -282,10 +290,26 @@ class PuzzleGUI:
         
         if selected_method == 0:
             state_board_in_list = list()
+            self.current_solution = list()
+            #PQ IMPLEMENTEI EM FORMATO APENAS DE LISTA N LISTA DE LISTAS
             for i in range(3):
                 for j in range(3):
                     state_board_in_list.append(self.board.state[i][j])
-            print("largura", state_board_in_list)
+            
+            root = Node(state_board_in_list, None, None)
+            solve_node, node_visited = bfs(root)
+            list_backtracking_nodes = backtracking(solve_node)
+            for node in list_backtracking_nodes:
+                self.current_solution.append(node.action)
+            self.play_solution(self.current_solution)
+        if selected_method == 1: # DFS
+            pass
+        if selected_method == 2: # HEURÍSTIC
+            pass
+        if selected_method == 3: # A*
+            pass
+                
+            
         
 
 class CustomStateDialog:

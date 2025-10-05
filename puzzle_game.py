@@ -29,7 +29,8 @@ class Board:
             self.state = copy.deepcopy(state)
         
         self.empty_pos = self._find_empty_position()
-    
+    def ret_state(self):
+        return self.state
     def _find_empty_position(self) -> Tuple[int, int]:
         """Encontra a posição do espaço vazio (0)"""
         for i in range(3):

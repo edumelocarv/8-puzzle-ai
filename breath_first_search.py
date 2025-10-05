@@ -56,7 +56,7 @@ if __name__ == "__main__":
   node, visit_nodes = bfs(root)
   list_resolve = backtracking(node)
   for node in list_resolve:
-    print(node.state, node.action)
+    print(node.action)
   print(f"Nós visitados: {visit_nodes}")
     
 
