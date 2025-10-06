@@ -298,7 +298,7 @@ class PuzzleGUI:
                     state_board_in_list.append(self.board.state[i][j])
             
             root = Node(state_board_in_list, None, None)
-            solve_node, node_visited = bfs(root)
+            solve_node, node_visited, list_explored_nodes_len = bfs(root)
             if not solve_node:
                 messagebox.showwarning("O algoritmo não encontrou uma solução para esse tabuleiro")
                 return

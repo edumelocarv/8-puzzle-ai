@@ -3,9 +3,9 @@ from collections import deque
 from generate_succeessors import create_successors
 from Node import Node
 
-init_board = [1,6,0,
-              7,8,2,
-              3,4,5]
+init_board = [4,5,7,
+              8,0,1,
+              3,6,2]
 final_state =  [
               1,2,3,
               4,5,6,
@@ -29,7 +29,7 @@ def bfs(node: Node):
       actual_node = fronteira.popleft()
       if actual_node.state == final_state:
         visit_nodes += 1
-        return (actual_node, visit_nodes)
+        return (actual_node, visit_nodes, len(explorados))
       visit_nodes += 1
       actual_level_nodes.append(actual_node)
       #expand nodes
