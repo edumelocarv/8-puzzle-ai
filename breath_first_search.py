@@ -53,11 +53,11 @@ def backtracking(node: Node):
     node = node.parent
   
 if __name__ == "__main__":
-  node, visit_nodes = bfs(root)
+  node, visit_nodes, expl_nodes = bfs(root)
   list_resolve = backtracking(node)
-  for node in list_resolve:
-    print(node.action)
-  print(f"Nós visitados: {visit_nodes}")
+  """ for node in list_resolve:
+    print(node.action) """
+  print(f"Nós visitados: {visit_nodes}, Quantidade de nós armazenados: {expl_nodes}")
     
 
 
