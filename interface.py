@@ -11,6 +11,9 @@ from breath_first_search import bfs, backtracking
 from Node import Node
 from puzzle_game import Board
 
+from a_star_search import a_star_search
+from deep_first_search import dfs
+
 
 class PuzzleGUI:
     """Interface gráfica para o puzzle 8"""
