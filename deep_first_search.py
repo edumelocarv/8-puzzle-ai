@@ -21,9 +21,8 @@ def dfs(node: Node):
         explored_states.add(tuple(child.state))
         
 if __name__ == "__main__":
-  initial_board = [4,5,7,
-                  8,0,1,
-                  3,6,2]
+  initial_board =  [8,6,7,2,5,4,3,0,1]
+
   root = Node(initial_board, None, None)
   node_solve, visited_nodes, explored_states_len = dfs(root)
   for node in node_solve.path():

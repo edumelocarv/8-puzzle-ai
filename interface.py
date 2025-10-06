@@ -327,6 +327,7 @@ class PuzzleGUI:
             
             self.move_count = 0    
             self.play_solution(self.current_solution)
+            messagebox.showinfo("OI")
         if selected_method == 1: # DFS
             state_board_in_list = list()
             self.current_solution = list()
@@ -407,11 +408,6 @@ class PuzzleGUI:
             # Reproduz a solução
             self.move_count = 0
             self.play_solution(moves)
-            
-            
-                
-            
-        
 
 class CustomStateDialog:
     """Dialog para definir um estado personalizado do tabuleiro"""
