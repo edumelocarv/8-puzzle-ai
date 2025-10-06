@@ -112,7 +112,7 @@ A classe `Board` oferece os seguintes métodos principais:
 ## Status do Desenvolvimento
 
 - [x] **Fase 1**: Estrutura básica e interface gráfica ✅
-- [ ] **Fase 2**: Algoritmos de busca cega
+- [x] **Fase 2**: Algoritmos de busca cega
 - [ ] **Fase 3**: Algoritmos de busca heurística
 - [ ] **Fase 4**: Comparação e análise de resultados
 - [ ] **Fase 5**: Relatório final
