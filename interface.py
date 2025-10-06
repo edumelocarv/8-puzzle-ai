@@ -10,6 +10,7 @@ import random
 from breath_first_search import bfs, backtracking
 from Node import Node
 from puzzle_game import Board
+from a_star_search import a_star_search
 
 
 class PuzzleGUI:
@@ -218,7 +219,7 @@ class PuzzleGUI:
         
         # Atualiza informações
         if self.board.is_goal_state():
-            self.status_label.config(text="Estado: RESOLVIDO! 🎉", fg="green")
+            self.status_label.config(text="Estado: RESOLVIDO!", fg="green")
         else:
             self.status_label.config(text="Estado: Jogando", fg="black")
         
@@ -273,18 +274,22 @@ class PuzzleGUI:
         if index >= len(moves):
             return
         self.board.move(moves[index])
+        self.move_count += 1  # Incrementa ANTES de update_display
         self.update_display()
-        self.root.after(300, lambda: self.play_solution(moves, index + 1)) 
-        self.move_count += 1             
+        self.root.after(300, lambda: self.play_solution(moves, index + 1))             
     
     def solve_puzzle(self):
         """Resolve o puzzle usando o método selecionado"""
         if self.board.is_goal_state():
-            messagebox.showinfo("Já resolvido", "O puzzle já está no estado final!")
+            print("\n" + "="*50)
+            print("O puzzle já está no estado final!")
+            print("="*50)
             return
         
         if not self.board.is_solvable():
-            messagebox.showwarning("Não solvível", "Este estado do puzzle não pode ser resolvido!")
+            print("\n" + "="*50)
+            print("AVISO: Este estado do puzzle não pode ser resolvido!")
+            print("="*50)
             return
         
         selected_method = self.solving_methods.index(self.method_var.get()) 
@@ -300,11 +305,24 @@ class PuzzleGUI:
             root = Node(state_board_in_list, None, None)
             solve_node, node_visited, list_explored_nodes_len = bfs(root)
             if not solve_node:
-                messagebox.showwarning("O algoritmo não encontrou uma solução para esse tabuleiro")
+                print("\n" + "="*50)
+                print("ERRO: BFS não encontrou uma solução para esse tabuleiro")
+                print("="*50)
                 return
             list_backtracking_nodes = solve_node.path()
             for node in list_backtracking_nodes:
                 self.current_solution.append(node.action)
+            
+            # Mostra informações sobre a solução no console
+            print("\n" + "="*50)
+            print("BFS encontrou solução!")
+            print("="*50)
+            print(f"Passos da solução: {len(self.current_solution)}")
+            print(f"Nós visitados: {node_visited}")
+            print(f"Estados explorados: {list_explored_nodes_len}")
+            print("\nReproduzindo solução...")
+            print("="*50)
+            
             self.move_count = 0    
             self.play_solution(self.current_solution)
         if selected_method == 1: # DFS
@@ -313,16 +331,70 @@ class PuzzleGUI:
             from heuristic_search import greedy_best_first_search_with_loop
             moves, steps = greedy_best_first_search_with_loop(self.board)
             if moves is None:
-                messagebox.showwarning("Loop detectado", f"O algoritmo entrou em loop após {steps} movimentos.")
+                print("\n" + "="*50)
+                print(f"AVISO: Busca Heurística entrou em loop após {steps} movimentos.")
+                print("="*50)
                 return
             elif not moves:
-                messagebox.showinfo("Resolvido", "O puzzle já estava resolvido!")
+                print("\n" + "="*50)
+                print("O puzzle já estava resolvido!")
+                print("="*50)
                 return
+            
+            # Mostra informações sobre a solução no console
+            print("\n" + "="*50)
+            print("Busca Heurística encontrou solução!")
+            print("="*50)
+            print(f"Passos da solução: {len(moves)}")
+            print(f"Passos percorridos: {steps}")
+            print("\nReproduzindo solução...")
+            print("="*50)
+            
             self.move_count = 0
             self.play_solution(moves)
             pass
         if selected_method == 3: # A*
-            pass
+            # Executa o algoritmo A*
+            result = a_star_search(self.board)
+            
+            if result is None or result[0] is None:
+                print("\n" + "="*50)
+                print("ERRO: O algoritmo A* não encontrou uma solução para este tabuleiro!")
+                print("="*50)
+                return
+            
+            # Extrai a solução e métricas
+            solution_node, metrics = result
+            solution_path = solution_node.path()
+            
+            # Converte o caminho de nós para lista de ações
+            moves = []
+            for node in solution_path[1:]:  # Pula o estado inicial
+                if node.action:
+                    moves.append(node.action)
+            
+            if not moves:
+                print("\n" + "="*50)
+                print("O puzzle já estava no estado final!")
+                print("="*50)
+                return
+            
+            # Mostra informações sobre a solução no console
+            print("\n" + "="*50)
+            print("A* encontrou solução!")
+            print("="*50)
+            print(f"Passos da solução: {len(moves)}")
+            print(f"Nós visitados: {metrics['visited_nodes']}")
+            print(f"Estados explorados: {metrics['explored_states']}")
+            print(f"Fronteira máxima: {metrics['max_frontier']}")
+            print("\nReproduzindo solução...")
+            print("="*50)
+            
+            # Reproduz a solução
+            self.move_count = 0
+            self.play_solution(moves)
+            
+            
                 
             
         

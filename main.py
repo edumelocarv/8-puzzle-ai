@@ -13,7 +13,7 @@ if __name__ == "__main__":
     print("- Gerar estados aleatórios solvíveis")
     print("\nObjetivo: Organize as peças na ordem:")
     print("1 2 3")
-    print("4 5 6") 
+    print("4 5 6")
     print("7 8  ")
     print("\nAbrindo interface...")
     
