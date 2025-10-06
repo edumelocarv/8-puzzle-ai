@@ -302,14 +302,24 @@ class PuzzleGUI:
             if not solve_node:
                 messagebox.showwarning("O algoritmo não encontrou uma solução para esse tabuleiro")
                 return
-            list_backtracking_nodes = backtracking(solve_node)
+            list_backtracking_nodes = solve_node.path()
             for node in list_backtracking_nodes:
                 self.current_solution.append(node.action)
             self.move_count = 0    
             self.play_solution(self.current_solution)
         if selected_method == 1: # DFS
             pass
-        if selected_method == 2: # HEURÍSTIC
+        if selected_method == 2:
+            from heuristic_search import greedy_best_first_search_with_loop
+            moves, steps = greedy_best_first_search_with_loop(self.board)
+            if moves is None:
+                messagebox.showwarning("Loop detectado", f"O algoritmo entrou em loop após {steps} movimentos.")
+                return
+            elif not moves:
+                messagebox.showinfo("Resolvido", "O puzzle já estava resolvido!")
+                return
+            self.move_count = 0
+            self.play_solution(moves)
             pass
         if selected_method == 3: # A*
             pass
