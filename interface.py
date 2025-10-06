@@ -10,7 +10,7 @@ import random
 from breath_first_search import bfs, backtracking
 from Node import Node
 from puzzle_game import Board
-
+from deep_first_search import dfs
 
 class PuzzleGUI:
     """Interface gráfica para o puzzle 8"""
@@ -308,6 +308,18 @@ class PuzzleGUI:
             self.move_count = 0    
             self.play_solution(self.current_solution)
         if selected_method == 1: # DFS
+            state_board_in_list = list()
+            self.current_solution = list()
+            for i in range(3):
+                for j in range(3):
+                    state_board_in_list.append(self.board.state[i][j])
+            root = Node(state_board_in_list)
+            solve_node, visited_nodes, list_explored_nodes_len = dfs(root)
+            list_backtracking_nodes = solve_node.path()
+            for node in list_backtracking_nodes:
+                self.current_solution.append(node.action)
+            self.move_count = 0
+            self.play_solution(self.current_solution)
             pass
         if selected_method == 2:
             from heuristic_search import greedy_best_first_search_with_loop
