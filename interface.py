@@ -341,6 +341,7 @@ class PuzzleGUI:
                 self.current_solution.append(node.action)
             self.move_count = 0
             self.play_solution(self.current_solution)
+            messagebox.showinfo("RESULTADOS",f"Passos da solução: {len(self.current_solution)}\nNós visitados: {visited_nodes}\nEstados explorados: {list_explored_nodes_len}\n")
             pass
         if selected_method == 2:
             from heuristic_search import greedy_best_first_search_with_loop
