@@ -232,9 +232,9 @@ if __name__ == "__main__":
     
     # Cria um estado de teste
     test_state = [
-        [1, 2, 3],
-        [4, 0, 6],
-        [7, 5, 8]
+        [8, 6, 7],
+        [2, 5, 4],
+        [3, 0, 1]
     ]
     
     board = Board(test_state)

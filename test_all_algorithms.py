@@ -8,13 +8,33 @@ from puzzle_game import Board
 
 class TestAllAlgorithms:
     def __init__(self):
-        # 5 casos de teste com diferentes dificuldades (todos solúveis)
+        # 5 casos de teste com diferentes dificuldades (todos solúveis) - formato matriz 3x3
         self.test_cases = [
-            ("Resolvido (0 movimentos)", [1,2,3,4,5,6,7,8,0]),
-            ("Muito fácil (2 movimentos)", [1,2,3,4,5,6,0,7,8]),
-            ("Médio (6 movimentos)", [1,2,3,5,0,6,4,7,8]),
-            ("Difícil (14 movimentos)", [2,5,3,1,0,6,4,7,8]),
-            ("Muito difícil (31 movimentos)", [8,6,7,2,5,4,3,0,1])
+            ("Resolvido (0 movimentos)", [
+                [1, 2, 3],
+                [4, 5, 6],
+                [7, 8, 0]
+            ]),
+            ("Muito fácil (2 movimentos)", [
+                [1, 2, 3],
+                [4, 5, 6],
+                [0, 7, 8]
+            ]),
+            ("Médio (6 movimentos)", [
+                [1, 2, 3],
+                [5, 0, 6],
+                [4, 7, 8]
+            ]),
+            ("Difícil (14 movimentos)", [
+                [2, 5, 3],
+                [1, 0, 6],
+                [4, 7, 8]
+            ]),
+            ("Muito difícil (31 movimentos)", [
+                [8, 6, 7],
+                [2, 5, 4],
+                [3, 0, 1]
+            ])
         ]
         
         # Algoritmos disponíveis
@@ -25,23 +45,28 @@ class TestAllAlgorithms:
             "A*": self.test_astar
         }
     
-    def convert_list_to_board(self, state_list):
-        """Converte lista para formato Board (matriz 3x3)"""
-        board = Board()
-        for i in range(3):
-            for j in range(3):
-                board.state[i][j] = state_list[i * 3 + j]
-        board.empty_pos = board.find_empty_position()
+    def matrix_to_list(self, matrix):
+        """Converte matriz 3x3 para lista 1D"""
+        result = []
+        for row in matrix:
+            for element in row:
+                result.append(element)
+        return result
+    
+    def matrix_to_board(self, matrix):
+        """Converte matriz 3x3 para objeto Board"""
+        board = Board(matrix)
         return board
     
-    def test_bfs(self, initial_state):
+    def test_bfs(self, initial_matrix):
         """Testa o algoritmo BFS"""
         try:
-            root = Node(initial_state, None, None)
+            # Converte matriz para lista 1D para o BFS
+            initial_list = self.matrix_to_list(initial_matrix)
+            root = Node(initial_list, None, None)
+            
             start_time = time.perf_counter()
-            
             result = bfs(root)
-            
             end_time = time.perf_counter()
             execution_time = end_time - start_time
             
@@ -76,14 +101,15 @@ class TestAllAlgorithms:
                 "time": 0
             }
     
-    def test_dfs(self, initial_state):
+    def test_dfs(self, initial_matrix):
         """Testa o algoritmo DFS"""
         try:
-            root = Node(initial_state, None, None)
+            # Converte matriz para lista 1D para o DFS
+            initial_list = self.matrix_to_list(initial_matrix)
+            root = Node(initial_list, None, None)
+            
             start_time = time.perf_counter()
-            
             result = dfs(root)
-            
             end_time = time.perf_counter()
             execution_time = end_time - start_time
             
@@ -118,14 +144,14 @@ class TestAllAlgorithms:
                 "time": 0
             }
     
-    def test_heuristic(self, initial_state):
+    def test_heuristic(self, initial_matrix):
         """Testa a Busca Heurística"""
         try:
-            board = self.convert_list_to_board(initial_state)
+            # Converte matriz para Board para a busca heurística
+            board = self.matrix_to_board(initial_matrix)
+            
             start_time = time.perf_counter()
-            
             moves, steps = greedy_best_first_search_with_loop(board)
-            
             end_time = time.perf_counter()
             execution_time = end_time - start_time
             
@@ -164,14 +190,14 @@ class TestAllAlgorithms:
                 "time": 0
             }
     
-    def test_astar(self, initial_state):
+    def test_astar(self, initial_matrix):
         """Testa o algoritmo A*"""
         try:
-            board = self.convert_list_to_board(initial_state)
+            # Converte matriz para Board para o A*
+            board = self.matrix_to_board(initial_matrix)
+            
             start_time = time.perf_counter()
-            
             result = a_star_search(board)
-            
             end_time = time.perf_counter()
             execution_time = end_time - start_time
             
@@ -207,18 +233,20 @@ class TestAllAlgorithms:
                 "time": 0
             }
     
-    def run_single_test(self, algorithm_name, test_name, initial_state):
+    def run_single_test(self, algorithm_name, test_name, initial_matrix):
         """Executa um teste individual"""
         print(f"\n{'='*70}")
         print(f"🧪 TESTE: {algorithm_name} - {test_name}")
         print(f"{'='*70}")
-        print(f"Estado inicial: {initial_state}")
+        print(f"Estado inicial:")
+        for row in initial_matrix:
+            print(f"  {row}")
         
         if algorithm_name not in self.algorithms:
             print(f"❌ Algoritmo '{algorithm_name}' não encontrado!")
             return None
         
-        result = self.algorithms[algorithm_name](initial_state)
+        result = self.algorithms[algorithm_name](initial_matrix)
         
         if result["success"]:
             print(f"✅ SUCESSO!")
@@ -255,8 +283,8 @@ class TestAllAlgorithms:
         results = []
         total_time = 0
         
-        for test_name, initial_state in self.test_cases:
-            result = self.run_single_test(algorithm_name, test_name, initial_state)
+        for test_name, initial_matrix in self.test_cases:
+            result = self.run_single_test(algorithm_name, test_name, initial_matrix)
             results.append((test_name, result))
             
             if result and result["success"]:
@@ -285,16 +313,18 @@ class TestAllAlgorithms:
             print("❌ Índice de teste inválido!")
             return
         
-        test_name, initial_state = self.test_cases[test_index]
+        test_name, initial_matrix = self.test_cases[test_index]
         print(f"\n{'='*80}")
         print(f"⚔️  COMPARAÇÃO DE ALGORITMOS - {test_name}")
-        print(f"Estado inicial: {initial_state}")
+        print(f"Estado inicial:")
+        for row in initial_matrix:
+            print(f"  {row}")
         print(f"{'='*80}")
         
         results = {}
         for algorithm_name in self.algorithms.keys():
             print(f"\n--- {algorithm_name} ---")
-            result = self.algorithms[algorithm_name](initial_state)
+            result = self.algorithms[algorithm_name](initial_matrix)
             results[algorithm_name] = result
             
             if result["success"]:
@@ -389,12 +419,12 @@ def main():
     
     while True:
         print("\n📋 OPÇÕES DISPONÍVEIS:")
-        print("1. Executar TODOS os algoritmos em TODOS os casos")
-        print("2. Testar algoritmo específico")
-        print("3. Comparar algoritmos em caso específico")
-        print("4. Teste rápido (caso médio)")
-        print("5. Listar casos de teste")
-        print("6. Sair")
+        print("1. 🚀 Executar TODOS os algoritmos em TODOS os casos")
+        print("2. 🎯 Testar algoritmo específico")
+        print("3. ⚔️  Comparar algoritmos em caso específico")
+        print("4. 📊 Teste rápido (caso médio)")
+        print("5. 📋 Listar casos de teste")
+        print("6. ❌ Sair")
         
         choice = input("\n👉 Escolha uma opção (1-6): ").strip()
         
@@ -418,8 +448,11 @@ def main():
                 
         elif choice == "3":
             print("\n📋 CASOS DE TESTE DISPONÍVEIS:")
-            for i, (name, state) in enumerate(tester.test_cases):
-                print(f"  {i}: {name} - {state}")
+            for i, (name, matrix) in enumerate(tester.test_cases):
+                print(f"  {i}: {name}")
+                for row in matrix:
+                    print(f"     {row}")
+                print()
             
             try:
                 test_idx = int(input("\n👉 Digite o número do caso (0-4): "))
@@ -432,9 +465,11 @@ def main():
             
         elif choice == "5":
             print(f"\n📋 CASOS DE TESTE ({len(tester.test_cases)} disponíveis):")
-            for i, (name, state) in enumerate(tester.test_cases):
+            for i, (name, matrix) in enumerate(tester.test_cases):
                 print(f"  {i}: {name}")
-                print(f"     Estado: {state}")
+                print(f"     Estado:")
+                for row in matrix:
+                    print(f"       {row}")
                 print()
                 
         elif choice == "6":
