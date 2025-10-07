@@ -327,7 +327,7 @@ class PuzzleGUI:
             
             self.move_count = 0    
             self.play_solution(self.current_solution)
-            messagebox.showinfo("OI")
+            messagebox.showinfo("RESULTADOS",f"Passos da solução: {len(self.current_solution)}\nNós visitados: {node_visited}\nEstados explorados: {list_explored_nodes_len}\n")
         if selected_method == 1: # DFS
             state_board_in_list = list()
             self.current_solution = list()
@@ -344,7 +344,7 @@ class PuzzleGUI:
             pass
         if selected_method == 2:
             from heuristic_search import greedy_best_first_search_with_loop
-            moves, steps = greedy_best_first_search_with_loop(self.board)
+            moves, num_moves, visited, finals = greedy_best_first_search_with_loop(self.board)
             if moves is None:
                 print("\n" + "="*50)
                 print(f"AVISO: Busca Heurística entrou em loop após {steps} movimentos.")
@@ -355,18 +355,9 @@ class PuzzleGUI:
                 print("O puzzle já estava resolvido!")
                 print("="*50)
                 return
-            
-            # Mostra informações sobre a solução no console
-            print("\n" + "="*50)
-            print("Busca Heurística encontrou solução!")
-            print("="*50)
-            print(f"Passos da solução: {len(moves)}")
-            print(f"Passos percorridos: {steps}")
-            print("\nReproduzindo solução...")
-            print("="*50)
-            
             self.move_count = 0
             self.play_solution(moves)
+            messagebox.showinfo("RESULTADOS",f"Passos da solução: {num_moves}\nNós visitados: {visited}")
             pass
         if selected_method == 3: # A*
             # Executa o algoritmo A*
@@ -394,20 +385,10 @@ class PuzzleGUI:
                 print("="*50)
                 return
             
-            # Mostra informações sobre a solução no console
-            print("\n" + "="*50)
-            print("A* encontrou solução!")
-            print("="*50)
-            print(f"Passos da solução: {len(moves)}")
-            print(f"Nós visitados: {metrics['visited_nodes']}")
-            print(f"Estados explorados: {metrics['explored_states']}")
-            print(f"Fronteira máxima: {metrics['max_frontier']}")
-            print("\nReproduzindo solução...")
-            print("="*50)
-            
             # Reproduz a solução
             self.move_count = 0
             self.play_solution(moves)
+            messagebox.showinfo("RESULTADOS",f"Passos da solução: {len(self.current_solution)}\nNós visitados: {metrics['visited_nodes']}\nEstados explorados: {metrics['explored_states']}\n")
 
 class CustomStateDialog:
     """Dialog para definir um estado personalizado do tabuleiro"""

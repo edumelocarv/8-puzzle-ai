@@ -17,7 +17,7 @@ root = Node(init_board, None, None)
 def bfs(node: Node):
   visit_nodes = 0
   if node.state == final_state:
-    return
+    return (node, visit_nodes)
   fronteira = deque()
   fronteira.append(node)
   explorados = set(node.state)

@@ -66,41 +66,48 @@ def heuristic(board: Board) -> int:
 # ==================== Busca Gulosa ====================
 
 # ==================== Busca Gulosa ====================
-
 def greedy_best_first_search_with_loop(initial_board: Board) -> Optional[tuple]:
     """
     Resolve o 8-puzzle usando busca gulosa (Greedy Best-First Search).
 
     Retorna:
-        Tupla:
-            - Se encontrar solução: (lista de movimentos, número de movimentos)
-            - Se entrar em loop: ("loop", número de movimentos até o loop)
-        Ou None se não houver solução inicial.
+        - Se encontrar solução: (movimentos, número de movimentos, nós_visitados, nós_finais)
+        - Se entrar em loop: (None, custo_ate_loop, nós_visitados, nós_finais)
+        - None se não houver solução.
     """
     root = Node(initial_board)
     if root.state.is_goal_state():
-        return [], 0  # já resolvido
+        return [], 0, 1, [root.state]  # já resolvido
 
     frontier = []
     heapq.heappush(frontier, (heuristic(root.state), next(counter), root))
     explored = set()
+    nodes_visited = 0
+    final_nodes = []
 
     while frontier:
         _, _, current_node = heapq.heappop(frontier)
+        nodes_visited += 1  # contamos o nó expandido
 
         state_str = str(current_node.state)
         if state_str in explored:
-            # Loop detectado: retorna quantidade de peças até aqui
-            return None, current_node.cost
+            # Loop detectado
+            return None, current_node.cost, nodes_visited, final_nodes
 
         explored.add(state_str)
 
         if current_node.state.is_goal_state():
             path = current_node.path()
             moves = [node.action for node in path if node.action is not None]
-            return moves, len(moves)
+            return moves, len(moves), nodes_visited, final_nodes
 
-        for move in current_node.state.get_possible_moves():
+        possible_moves = current_node.state.get_possible_moves()
+
+        if not possible_moves:
+            # Nó sem filhos possíveis (folha)
+            final_nodes.append(current_node.state)
+
+        for move in possible_moves:
             new_board = current_node.state.copy()
             new_board.move(move)
             child = Node(new_board, move, current_node)

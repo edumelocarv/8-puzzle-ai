@@ -19,9 +19,12 @@ def dfs(node: Node):
       if tuple(child.state) not in explored_states:
         frontier.append(child)  
         explored_states.add(tuple(child.state))
+  return (None, visited_nodes, len(explored_states))
         
 if __name__ == "__main__":
-  initial_board =  [8,6,7,2,5,4,3,0,1]
+  initial_board =  [1,0,3,
+               4,2,6,
+               7,5,8]
 
   root = Node(initial_board, None, None)
   node_solve, visited_nodes, explored_states_len = dfs(root)
