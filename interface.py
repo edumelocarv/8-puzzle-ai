@@ -357,7 +357,7 @@ class PuzzleGUI:
                 return
             self.move_count = 0
             self.play_solution(moves)
-            messagebox.showinfo("RESULTADOS",f"Passos da solução: {num_moves}\nNós visitados: {visited}")
+            messagebox.showinfo("RESULTADOS",f"Passos da solução: {num_moves}\nNós visitados: {visited}\nEstados explorados: {finals}\n")
             pass
         if selected_method == 3: # A*
             # Executa o algoritmo A*
