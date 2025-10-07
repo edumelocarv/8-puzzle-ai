@@ -346,9 +346,7 @@ class PuzzleGUI:
             from heuristic_search import greedy_best_first_search_with_loop
             moves, num_moves, visited, finals = greedy_best_first_search_with_loop(self.board)
             if moves is None:
-                print("\n" + "="*50)
-                print(f"AVISO: Busca Heurística entrou em loop após {steps} movimentos.")
-                print("="*50)
+                messagebox.showerror(f"AVISO: Busca Heurística entrou em loop após {num_moves} movimentos.")
                 return
             elif not moves:
                 print("\n" + "="*50)
